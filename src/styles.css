@@ -163,21 +163,21 @@
   }
 }
 
-@layer utilities {
-  .text-gradient-brand {
-    background-image: var(--gradient-brand);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .bg-gradient-brand {
-    background-image: var(--gradient-brand);
-  }
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
-  }
-  .shadow-blue {
-    box-shadow: var(--shadow-blue);
-  }
+.text-gradient-brand {
+  background-image: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
+.bg-gradient-brand {
+  background-image: var(--gradient-brand);
+}
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+.shadow-blue {
+  box-shadow: var(--shadow-blue);
+}
+
 
