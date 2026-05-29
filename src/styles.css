@@ -164,20 +164,21 @@
 }
 
 .text-gradient-brand {
-  background-image: var(--gradient-brand);
+  background-image: linear-gradient(135deg, #e6007e, #29abe2);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
 .bg-gradient-brand {
-  background-image: var(--gradient-brand);
+  background-image: linear-gradient(135deg, #e6007e, #29abe2) !important;
 }
 .shadow-soft {
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 20px 50px -20px rgba(230, 0, 126, 0.35);
 }
 .shadow-blue {
-  box-shadow: var(--shadow-blue);
+  box-shadow: 0 20px 50px -20px rgba(41, 171, 226, 0.35);
 }
+
 
 
