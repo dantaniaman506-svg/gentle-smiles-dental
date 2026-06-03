@@ -123,7 +123,7 @@ export function Appointment() {
             href={`https://wa.me/${CLINIC.whatsapp}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-secondary px-5 py-3 font-bold text-secondary transition-colors hover:bg-secondary hover:text-secondary-foreground"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-3 font-bold text-secondary-foreground shadow-blue transition-transform hover:scale-105"
           >
             <MessageCircle className="h-5 w-5" />
             Chat with us directly
