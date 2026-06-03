@@ -64,7 +64,7 @@ export function Hero() {
               href={`https://wa.me/${CLINIC.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-secondary bg-background px-6 py-3 text-base font-bold text-secondary transition-colors hover:bg-secondary hover:text-secondary-foreground"
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-3.5 text-base font-bold text-secondary-foreground shadow-blue transition-transform hover:scale-105"
             >
               <MessageCircle className="h-5 w-5" />
               WhatsApp
