@@ -220,7 +220,7 @@ export function Appointment() {
                         <Calendar
                           mode="single"
                           selected={date}
-                          onSelect={setDate}
+                          onSelect={handleDateChange}
                           initialFocus
                           disabled={(d) =>
                             d < new Date(new Date().setHours(0, 0, 0, 0))
@@ -231,22 +231,15 @@ export function Appointment() {
                     </PopoverContent>
                   </Popover>
 
-                  <div className="relative">
-                    <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
-                    <select
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      className={cn(inputCls, "appearance-none pl-9")}
-                    >
-                      <option value="">Pick a time</option>
-                      {TIME_SLOTS.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <TimePicker
+                    value={time}
+                    onChange={handleTimeChange}
+                    triggerClassName={inputCls}
+                  />
                 </div>
+                {timeError && (
+                  <p className="mt-2 text-sm text-destructive">{timeError}</p>
+                )}
               </div>
 
               <div>
