@@ -160,15 +160,67 @@ export function Appointment() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-semibold" htmlFor="date">
-                  Preferred date & time
+                <label className="mb-1.5 block text-sm font-semibold">
+                  Preferred date &amp; time
                 </label>
-                <input
-                  id="date"
-                  name="date"
-                  className={inputCls}
-                  placeholder="e.g. Mon 4 PM"
-                />
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className={cn(
+                          inputCls,
+                          "flex items-center gap-2 text-left",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="h-4 w-4 text-secondary" />
+                        {date ? format(date, "dd MMM yyyy") : "Pick a date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <div
+                        style={
+                          {
+                            "--primary": "oklch(0.7 0.15 233)",
+                            "--primary-foreground": "oklch(0.99 0.005 233)",
+                            "--accent": "oklch(0.93 0.05 233)",
+                            "--accent-foreground": "oklch(0.4 0.15 233)",
+                            "--ring": "oklch(0.7 0.15 233)",
+                          } as React.CSSProperties
+                        }
+                        className="rounded-xl bg-card"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          initialFocus
+                          disabled={(d) =>
+                            d < new Date(new Date().setHours(0, 0, 0, 0))
+                          }
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <div className="relative">
+                    <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
+                    <select
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className={cn(inputCls, "appearance-none pl-9")}
+                    >
+                      <option value="">Pick a time</option>
+                      {TIME_SLOTS.map((t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div>
