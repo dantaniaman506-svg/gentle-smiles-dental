@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { Send, MessageCircle } from "lucide-react";
+import { Send, MessageCircle, Calendar as CalendarIcon, Clock } from "lucide-react";
+import { format } from "date-fns";
 import { z } from "zod";
 import { CLINIC, SERVICES } from "./data";
 import { Reveal } from "./Reveal";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+const TIME_SLOTS = [
+  "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+  "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
+  "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM", "06:00 PM",
+  "06:30 PM", "07:00 PM",
+];
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name").max(80),
@@ -19,6 +30,8 @@ const schema = z.object({
 
 export function Appointment() {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [date, setDate] = useState<Date | undefined>();
+  const [time, setTime] = useState<string>("");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
