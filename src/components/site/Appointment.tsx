@@ -36,11 +36,14 @@ export function Appointment() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    const preferred = [date ? format(date, "EEE, dd MMM yyyy") : "", time]
+      .filter(Boolean)
+      .join(" · ");
     const data = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value,
       phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
       service: (form.elements.namedItem("service") as HTMLSelectElement).value,
-      date: (form.elements.namedItem("date") as HTMLInputElement).value,
+      date: preferred,
       message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
     };
 
