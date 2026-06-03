@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { Send, MessageCircle } from "lucide-react";
+import { Send, MessageCircle, Calendar as CalendarIcon, Clock } from "lucide-react";
+import { format } from "date-fns";
 import { z } from "zod";
 import { CLINIC, SERVICES } from "./data";
 import { Reveal } from "./Reveal";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+const TIME_SLOTS = [
+  "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+  "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
+  "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM", "06:00 PM",
+  "06:30 PM", "07:00 PM",
+];
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name").max(80),
@@ -19,15 +30,20 @@ const schema = z.object({
 
 export function Appointment() {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [date, setDate] = useState<Date | undefined>();
+  const [time, setTime] = useState<string>("");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    const preferred = [date ? format(date, "EEE, dd MMM yyyy") : "", time]
+      .filter(Boolean)
+      .join(" · ");
     const data = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value,
       phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
       service: (form.elements.namedItem("service") as HTMLSelectElement).value,
-      date: (form.elements.namedItem("date") as HTMLInputElement).value,
+      date: preferred,
       message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
     };
 
@@ -144,15 +160,67 @@ export function Appointment() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-semibold" htmlFor="date">
-                  Preferred date & time
+                <label className="mb-1.5 block text-sm font-semibold">
+                  Preferred date &amp; time
                 </label>
-                <input
-                  id="date"
-                  name="date"
-                  className={inputCls}
-                  placeholder="e.g. Mon 4 PM"
-                />
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className={cn(
+                          inputCls,
+                          "flex items-center gap-2 text-left",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="h-4 w-4 text-secondary" />
+                        {date ? format(date, "dd MMM yyyy") : "Pick a date"}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <div
+                        style={
+                          {
+                            "--primary": "oklch(0.7 0.15 233)",
+                            "--primary-foreground": "oklch(0.99 0.005 233)",
+                            "--accent": "oklch(0.93 0.05 233)",
+                            "--accent-foreground": "oklch(0.4 0.15 233)",
+                            "--ring": "oklch(0.7 0.15 233)",
+                          } as React.CSSProperties
+                        }
+                        className="rounded-xl bg-card"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          initialFocus
+                          disabled={(d) =>
+                            d < new Date(new Date().setHours(0, 0, 0, 0))
+                          }
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <div className="relative">
+                    <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
+                    <select
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className={cn(inputCls, "appearance-none pl-9")}
+                    >
+                      <option value="">Pick a time</option>
+                      {TIME_SLOTS.map((t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div>

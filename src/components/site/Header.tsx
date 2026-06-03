@@ -39,9 +39,9 @@ export function Header() {
           <img
             src={logo}
             alt="Confidental Clinic logo"
-            width={96}
-            height={96}
-            className="h-16 w-auto rounded-xl object-contain sm:h-20 lg:h-24"
+            width={128}
+            height={128}
+            className="h-20 w-auto rounded-xl object-contain sm:h-24 lg:h-28"
           />
         </a>
 
