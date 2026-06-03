@@ -50,7 +50,19 @@ export function Appointment() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const preferred = [date ? format(date, "EEE, dd MMM yyyy") : "", time]
+
+    if (date && time) {
+      const err = validateBusinessTime(date.getDay(), timeToMinutes(time));
+      if (err) {
+        setTimeError(err);
+        return;
+      }
+    }
+
+    const preferred = [
+      date ? format(date, "EEE, dd MMM yyyy") : "",
+      time ? formatTime(time) : "",
+    ]
       .filter(Boolean)
       .join(" · ");
     const data = {
