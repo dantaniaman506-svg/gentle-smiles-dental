@@ -23,6 +23,51 @@ export const TIMINGS = [
   { day: "Sunday", time: "10:00 AM – 2:00 PM" },
 ];
 
+// Business hours in minutes-from-midnight, keyed by JS getDay() (0 = Sunday)
+export const BUSINESS_HOURS: Record<number, { open: number; close: number }> = {
+  0: { open: 10 * 60, close: 14 * 60 }, // Sunday 10:00 AM – 2:00 PM
+  1: { open: 9 * 60 + 30, close: 19 * 60 + 30 }, // Mon
+  2: { open: 9 * 60 + 30, close: 19 * 60 + 30 },
+  3: { open: 9 * 60 + 30, close: 19 * 60 + 30 },
+  4: { open: 9 * 60 + 30, close: 19 * 60 + 30 },
+  5: { open: 9 * 60 + 30, close: 19 * 60 + 30 },
+  6: { open: 9 * 60 + 30, close: 19 * 60 + 30 }, // Saturday
+};
+
+const DAY_LABELS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+function fmt(mins: number) {
+  let h = Math.floor(mins / 60);
+  const m = mins % 60;
+  const period = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}:${m.toString().padStart(2, "0")} ${period}`;
+}
+
+/** Returns an error string if the time is outside business hours, else null. */
+export function validateBusinessTime(
+  day: number,
+  minutes: number
+): string | null {
+  const hours = BUSINESS_HOURS[day];
+  if (!hours) return "We are closed on this day.";
+  if (minutes < hours.open || minutes > hours.close) {
+    return `On ${DAY_LABELS[day]} we are open ${fmt(hours.open)} – ${fmt(
+      hours.close
+    )}. Please pick a time within these hours.`;
+  }
+  return null;
+}
+
 export const SERVICES = [
   {
     icon: "🧒",
