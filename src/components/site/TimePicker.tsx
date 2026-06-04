@@ -35,8 +35,8 @@ export function TimePicker({ value, onChange, placeholder = "Pick a time", trigg
 
   const selectHour = (h: number) => {
     setHour12(h);
-    setView("minutes");
     onChange({ hour12: h, minute: value?.minute ?? 0, period });
+    setView("minutes");
   };
 
   const selectMinute = (m: number) => {
@@ -48,15 +48,21 @@ export function TimePicker({ value, onChange, placeholder = "Pick a time", trigg
 
   const numbers = view === "hours" ? HOURS : MINUTES;
   const activeNumber = view === "hours" ? hour12 : value?.minute ?? null;
-  // hand angle
+
+  // hand angle (0deg points up, increases clockwise)
   const handAngle =
     view === "hours"
       ? hour12 != null
-        ? (HOURS.indexOf(hour12) * 30)
+        ? HOURS.indexOf(hour12) * 30
         : null
       : value?.minute != null
         ? (value.minute / 5) * 30
         : null;
+
+  const SIZE = 224; // clock diameter in px
+  const C = SIZE / 2; // center
+  const NUM_R = 92; // radius for numbers
+  const HAND_LEN = NUM_R; // needle reaches the active number
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -115,22 +121,40 @@ export function TimePicker({ value, onChange, placeholder = "Pick a time", trigg
           </div>
         </div>
 
+        <p className="mb-2 text-center text-xs font-semibold text-muted-foreground">
+          {view === "hours" ? "Select hour" : "Select minutes"}
+        </p>
+
         {/* clock face */}
-        <div className="relative mx-auto h-56 w-56 rounded-full bg-secondary/10">
-          {/* center dot */}
-          <div className="absolute left-1/2 top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary" />
-          {/* hand */}
-          {handAngle != null && (
-            <div
-              className="absolute left-1/2 top-1/2 z-0 h-[78px] w-0.5 origin-bottom -translate-x-1/2 -translate-y-full bg-secondary"
-              style={{ transform: `translate(-50%, -100%) rotate(${handAngle}deg)` }}
-            />
-          )}
+        <div
+          className="relative mx-auto rounded-full border-2 border-secondary/20 bg-secondary/5"
+          style={{ height: SIZE, width: SIZE }}
+        >
+          {/* needle (SVG so it lines up exactly with the active number) */}
+          <svg
+            className="pointer-events-none absolute inset-0 z-0"
+            width={SIZE}
+            height={SIZE}
+            viewBox={`0 0 ${SIZE} ${SIZE}`}
+          >
+            {handAngle != null && (
+              <line
+                x1={C}
+                y1={C}
+                x2={C + HAND_LEN * Math.sin((handAngle * Math.PI) / 180)}
+                y2={C - HAND_LEN * Math.cos((handAngle * Math.PI) / 180)}
+                stroke="var(--secondary)"
+                strokeWidth={3}
+                strokeLinecap="round"
+              />
+            )}
+            <circle cx={C} cy={C} r={5} fill="var(--secondary)" />
+          </svg>
+
           {numbers.map((n, i) => {
             const angle = (i * 30 - 90) * (Math.PI / 180);
-            const radius = 96;
-            const x = 112 + radius * Math.cos(angle);
-            const y = 112 + radius * Math.sin(angle);
+            const x = C + NUM_R * Math.cos(angle);
+            const y = C + NUM_R * Math.sin(angle);
             const isActive = activeNumber === n;
             return (
               <button
@@ -139,10 +163,10 @@ export function TimePicker({ value, onChange, placeholder = "Pick a time", trigg
                 onClick={() => (view === "hours" ? selectHour(n) : selectMinute(n))}
                 style={{ left: x, top: y }}
                 className={cn(
-                  "absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-sm font-bold transition-colors",
+                  "absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-sm font-bold transition-all",
                   isActive
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-foreground hover:bg-secondary/20"
+                    ? "scale-110 bg-secondary text-secondary-foreground shadow-blue"
+                    : "text-foreground hover:bg-secondary/20 active:bg-secondary active:text-secondary-foreground"
                 )}
               >
                 {view === "minutes" ? n.toString().padStart(2, "0") : n}
