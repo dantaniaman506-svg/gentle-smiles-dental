@@ -82,8 +82,8 @@
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.92 0.015 320);
   --input: oklch(0.92 0.015 320);
-  --ring: oklch(0.58 0.24 350);
-  --chart-1: oklch(0.58 0.24 350);
+  --ring: oklch(0.6 0.15 348);
+  --chart-1: oklch(0.6 0.15 348);
   --chart-2: oklch(0.7 0.15 233);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
@@ -97,7 +97,7 @@
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
 
-  --pink: oklch(0.58 0.24 350);
+  --pink: oklch(0.6 0.15 348);
   --blue: oklch(0.7 0.15 233);
   --gradient-brand: linear-gradient(135deg, #d65a9a, #29abe2);
   --shadow-soft: 0 20px 50px -20px rgba(214, 90, 154, 0.35);
